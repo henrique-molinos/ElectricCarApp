@@ -1,0 +1,53 @@
+package com.henrique.electriccarapp.presentation
+
+import android.os.Bundle
+import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.henrique.electriccarapp.R
+
+class CalcularAutonomiaActivity : AppCompatActivity() {
+    // Variáveis declaradas como lateinit, pois serão inicializadas posteriormente
+    lateinit var precoKWh : EditText   // Criação da variável precoKWh
+    lateinit var kmPercorrido : EditText // Criação da variável kmPercorrido
+    lateinit var btnCalcular : Button // Criação da variável btnCalcular
+    lateinit var resultado : TextView // Criação da variável que exibirá o resultado
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_calcular_autonomia)
+        setupViews()    // Chamada da função que setará as Views
+        setupListeners()    // Chamada da função que executa o Listener do click do botão
+    }
+
+    fun setupViews() {
+        // Recuperando valores: utilizaremos o método findViewById para buscar uma View.
+        // Esse método recebe como parâmetro um Resource. No Android, tudo que é referente à tela gera um identificador único dentro dos Resources
+        // Quando trabalhamos com Android utilizando Kotlin, ao utilizar o método findViewById, precisamos informar o componente que estamos buscando com o <>, neste caso, EditText
+        // No entanto, como a variável já foi criada anteriormente com a definição de seu tipo, não precisamos informar ao método o seguinte: findViewById<EditText>()
+        precoKWh = findViewById(R.id.et_preco_kw)  // Encontrando a View de Preço do kWh
+        kmPercorrido = findViewById(R.id.et_km_percorrido) // Encontrando a View de Kms Percorridos
+        btnCalcular = findViewById(R.id.btn_calcular)   // Encontrando o Button de cálculo
+        resultado = findViewById(R.id.tv_resultado_value) // Encontrando a View de resultado
+    }
+
+    fun setupListeners() {
+        // Criando um Listener para "ouvir" o clique do botão de calcular, e executar a função calcularAutonomia()
+        btnCalcular.setOnClickListener {
+            val inputPrecoKWh = precoKWh.text.toString()  // Acessando o texto da variável precoKWh (View et_preco_kw) digitado pelo usuário
+            Log.d("Input [precoKWh] ->", inputPrecoKWh)   // Gerando log do texto digitado. Verificar no Logcat
+            val inputKmPercorrido = kmPercorrido.text.toString() // Acessando o texto da variável KmPercorrido (View et_km_percorrido) digitado pelo usuário
+            Log.d("Input [kmPercorrido] ->", inputKmPercorrido) // Gerando log do texto digitado. Verificar no Logcat
+
+            val autonomia = calcularAutonomia(inputPrecoKWh.toFloat(), inputKmPercorrido.toFloat()) // A variável autonomia recebe o resultado do cálculo
+            resultado.text = autonomia.toString()   // Aplicando o valor do resultado à TextView resultado para exibição em tela
+        }
+    }
+
+    fun calcularAutonomia(precoKWh: Float, kmPercorrido: Float): Float {
+        return precoKWh / kmPercorrido  // Cálculo da autonomia
+    }
+
+}
