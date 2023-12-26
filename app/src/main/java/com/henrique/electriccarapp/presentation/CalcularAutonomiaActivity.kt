@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.henrique.electriccarapp.R
@@ -14,6 +15,7 @@ class CalcularAutonomiaActivity : AppCompatActivity() {
     lateinit var kmPercorrido : EditText // Criação da variável kmPercorrido
     lateinit var btnCalcular : Button // Criação da variável btnCalcular
     lateinit var resultado : TextView // Criação da variável que exibirá o resultado
+    lateinit var btnClose : ImageView // Criação da variável que fechará a tela de cálculo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,7 @@ class CalcularAutonomiaActivity : AppCompatActivity() {
         kmPercorrido = findViewById(R.id.et_km_percorrido) // Encontrando a View de Kms Percorridos
         btnCalcular = findViewById(R.id.btn_calcular)   // Encontrando o Button de cálculo
         resultado = findViewById(R.id.tv_resultado_value) // Encontrando a View de resultado
+        btnClose = findViewById(R.id.iv_close) // Encontrando a ImageView do botão de fechar
     }
 
     fun setupListeners() {
@@ -43,6 +46,10 @@ class CalcularAutonomiaActivity : AppCompatActivity() {
 
             val autonomia = calcularAutonomia(inputPrecoKWh.toFloat(), inputKmPercorrido.toFloat()) // A variável autonomia recebe o resultado do cálculo
             resultado.text = autonomia.toString()   // Aplicando o valor do resultado à TextView resultado para exibição em tela
+        }
+        // Criando um Listener para "ouvir" o clique na imagem e executar a função finish() para matar a tela.
+        btnClose.setOnClickListener {
+            finish()    // Irá desempilhar a activity e retornar para a tela anterior
         }
     }
 
