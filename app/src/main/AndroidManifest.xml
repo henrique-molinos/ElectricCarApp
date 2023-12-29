@@ -13,7 +13,7 @@
         android:theme="@style/Theme.ElectricCarApp"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
@@ -23,7 +23,7 @@
             </intent-filter>
             </activity>
         <activity
-            android:name=".presentation.CalcularAutonomiaActivity"
+            android:name=".ui.CalcularAutonomiaActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         </activity>
         </application>

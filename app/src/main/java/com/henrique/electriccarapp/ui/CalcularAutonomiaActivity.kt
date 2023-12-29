@@ -1,4 +1,4 @@
-package com.henrique.electriccarapp.presentation
+package com.henrique.electriccarapp.ui
 
 import android.os.Bundle
 import android.util.Log
