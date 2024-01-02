@@ -19,6 +19,14 @@ object CarFactory {
             potencia = "370cv",
             recarga = "40 min",
             urlPhoto = "www.uol.com.br"
+        ),
+        Carro(
+            id = 3,
+            preco = "R$ 500.000,00",
+            bateria = "420kWh",
+            potencia = "400cv",
+            recarga = "40 min",
+            urlPhoto = "www.g1.com.br"
         )
     )
 }

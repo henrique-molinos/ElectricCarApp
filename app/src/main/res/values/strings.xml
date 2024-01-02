@@ -12,4 +12,5 @@
     <string name="btn_calcular">Calcular</string>
     <string name="tv_resultado">Resultado:</string>
     <string name="tv_calcular_autonomia">Calcular Autonomia</string>
+    <string name="btn_redirect_calcular">Calcular</string>
 </resources>
