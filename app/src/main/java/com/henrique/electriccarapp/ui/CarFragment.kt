@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,6 +28,7 @@ class CarFragment : Fragment() {
 
     lateinit var listaCarros: RecyclerView // Criação da lista
     lateinit var fabCalcular: FloatingActionButton // Criação do botão
+    lateinit var progress: ProgressBar  // Criação da barra de progresso
 
     var carrosArray: ArrayList<Carro> = ArrayList()
 
@@ -49,10 +51,12 @@ class CarFragment : Fragment() {
         view.apply {
             listaCarros = findViewById(R.id.rv_lista_carros) // Encontrando a View reciclada
             fabCalcular = findViewById(R.id.fab_calcular)   // Encontrando o botão
+            progress = findViewById(R.id.pb_loader) // Encontrando a barra de progresso
         }
     }
 
     fun setupList() {
+        listaCarros.visibility = View.VISIBLE   // Deixando a lista de carros visível
         val adapter =
             CarAdapter(carrosArray) // Utilizando o adapter personalizado com os dados da array populada
         listaCarros.adapter = adapter
@@ -69,6 +73,7 @@ class CarFragment : Fragment() {
     fun callService() {
         val urlBase = "https://raw.githubusercontent.com/henrique-molinos/cars-api/main/cars.json"
         MyTask().execute(urlBase)
+        progress.visibility = View.VISIBLE  // Trazendo a barra de progresso na tela
     }
 
     inner class MyTask : AsyncTask<String, String, String>() {
@@ -140,6 +145,7 @@ class CarFragment : Fragment() {
                     )
                     carrosArray.add(model)
                 }
+                progress.visibility = View.GONE // Deixando a barra invisível após o retorno do serviço
                 setupList() // Depois de popular o carrosArray, executa a setupList() para mostrar os dados
             } catch (ex: Exception) {
                 Log.e("Erro ->", ex.message.toString())
