@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
+
         viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)

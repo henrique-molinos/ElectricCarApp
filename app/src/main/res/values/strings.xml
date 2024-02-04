@@ -15,4 +15,5 @@
     <string name="btn_redirect_calcular">Calcular</string>
     <string name="no_wifi">Sem conexão ):</string>
     <string name="response_error">Algo deu errado, por favor, tente novamente mais tarde</string>
+    <string name="saved_calc">saved_calc</string>
 </resources>

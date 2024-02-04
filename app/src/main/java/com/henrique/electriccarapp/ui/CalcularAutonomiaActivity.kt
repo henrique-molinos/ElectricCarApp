@@ -1,5 +1,6 @@
 package com.henrique.electriccarapp.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -22,6 +23,12 @@ class CalcularAutonomiaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_calcular_autonomia)
         setupViews()    // Chamada da função que setará as Views
         setupListeners()    // Chamada da função que executa o Listener do click do botão
+        setupCachedResult() // Chamada da função que coleta o resultado armazenado em Cache
+    }
+
+    private fun setupCachedResult() {
+        val valorCalculado = getSharedPref()
+        resultado.text = valorCalculado.toString()
     }
 
     fun setupViews() {
@@ -54,7 +61,23 @@ class CalcularAutonomiaActivity : AppCompatActivity() {
     }
 
     fun calcularAutonomia(precoKWh: Float, kmPercorrido: Float): Float {
+        val result = precoKWh / kmPercorrido
+        saveSharedPref(result)
         return precoKWh / kmPercorrido  // Cálculo da autonomia
+    }
+
+    fun saveSharedPref(resultado : Float) {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            putFloat(getString(R.string.saved_calc), resultado)
+            apply()
+        }
+    }
+
+    fun getSharedPref() : Float {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        val calculo = sharedPref.getFloat(getString(R.string.saved_calc), 0.0f)
+        return calculo
     }
 
 }
