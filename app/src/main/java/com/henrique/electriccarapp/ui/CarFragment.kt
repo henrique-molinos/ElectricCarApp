@@ -20,22 +20,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.henrique.electriccarapp.R
-import com.henrique.electriccarapp.data.CarFactory
 import com.henrique.electriccarapp.data.CarsApi
+import com.henrique.electriccarapp.data.local.CarRepository
 import com.henrique.electriccarapp.domain.Carro
 import com.henrique.electriccarapp.ui.adapter.CarAdapter
 import org.json.JSONArray
-import org.json.JSONObject
 import org.json.JSONTokener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -67,12 +62,18 @@ class CarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if(checkForInternet(context)) {
+        Log.d("LifeCycle", "ON RESUME CarFragment")
+        if (checkForInternet(context)) {
             // callService() -> Esse é outra forma de chamar o serviço
             getAllCars()
         } else {
             emptyState()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("LifeCycle", "ON PAUSE CarFragment")
     }
 
     fun setupRetrofit() {
@@ -88,11 +89,15 @@ class CarFragment : Fragment() {
         carsApi.getAllCars().enqueue(object : Callback<List<Carro>> {
             override fun onResponse(call: Call<List<Carro>>, response: Response<List<Carro>>) {
                 if (response.isSuccessful) {
-                    progress.isVisible = false // Deixando a barra invisível após o retorno do serviço
-                    noWifiIcon.isVisible = false   // Deixando o ícone de falta de conexão invisível após o retorno
-                    noWifiText.isVisible = false   // Deixando o texto de falta de conexão invisível após o retorno
+                    progress.isVisible =
+                        false // Deixando a barra invisível após o retorno do serviço
+                    noWifiIcon.isVisible =
+                        false   // Deixando o ícone de falta de conexão invisível após o retorno
+                    noWifiText.isVisible =
+                        false   // Deixando o texto de falta de conexão invisível após o retorno
 
-                    response.body()?.let { setupList(it) } // Depois de popular o carrosArray, executa a setupList() para mostrar os dados
+                    response.body()
+                        ?.let { setupList(it) } // Depois de popular o carrosArray, executa a setupList() para mostrar os dados
                 } else {
                     Toast.makeText(context, R.string.response_error, Toast.LENGTH_LONG).show()
                 }
@@ -117,7 +122,8 @@ class CarFragment : Fragment() {
             listaCarros = findViewById(R.id.rv_lista_carros) // Encontrando a View reciclada
             fabCalcular = findViewById(R.id.fab_calcular)   // Encontrando o botão
             progress = findViewById(R.id.pb_loader) // Encontrando a barra de progresso
-            noWifiIcon = findViewById(R.id.iv_empty_state)  // Encontrando o ícone de falta de conexão
+            noWifiIcon =
+                findViewById(R.id.iv_empty_state)  // Encontrando o ícone de falta de conexão
             noWifiText = findViewById(R.id.tv_no_wifi)  // Encontrando o texto de falta de conexão
         }
     }
@@ -129,8 +135,8 @@ class CarFragment : Fragment() {
             adapter = carroAdapter
             isVisible = true   // Deixando a lista de carros visível
         }
-        carroAdapter.carItemListener = { carro ->
-            val bateria = carro.bateria
+        carroAdapter.carItemLister = { carro ->
+            val isSaved = CarRepository(requireContext()).saveIfNotExist(carro)
         }
     }
 
@@ -142,16 +148,26 @@ class CarFragment : Fragment() {
         }
     }
 
-    fun checkForInternet(context: Context?) : Boolean {
-        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    fun checkForInternet(context: Context?): Boolean {
+        val connectivityManager = context?.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val network = connectivityManager.activeNetwork ?: return false
-            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(
+                network
+            ) ?: return false
 
             return when {
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                activeNetwork.hasTransport(
+                    NetworkCapabilities.TRANSPORT_WIFI
+                ) -> true
+
+                activeNetwork.hasTransport(
+                    NetworkCapabilities.TRANSPORT_CELLULAR
+                ) -> true
+
                 else -> false
             }
         } else {
@@ -240,8 +256,10 @@ class CarFragment : Fragment() {
                     carrosArray.add(model)
                 }
                 progress.isVisible = false // Deixando a barra invisível após o retorno do serviço
-                noWifiIcon.isVisible = false   // Deixando o ícone de falta de conexão invisível após o retorno
-                noWifiText.isVisible = false   // Deixando o texto de falta de conexão invisível após o retorno
+                noWifiIcon.isVisible =
+                    false   // Deixando o ícone de falta de conexão invisível após o retorno
+                noWifiText.isVisible =
+                    false   // Deixando o texto de falta de conexão invisível após o retorno
                 // setupList() // Depois de popular o carrosArray, executa a setupList() para mostrar os dados
             } catch (ex: Exception) {
                 Log.e("Erro ->", ex.message.toString())

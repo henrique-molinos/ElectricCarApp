@@ -11,7 +11,7 @@ import com.henrique.electriccarapp.domain.Carro
 
 class CarAdapter(private val carros: List<Carro>) : RecyclerView.Adapter<CarAdapter.ViewHolder>() {
 
-    var carItemListener : (Carro) -> Unit = {}
+    var carItemLister : (Carro) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.carro_item, parent, false)
@@ -25,7 +25,7 @@ class CarAdapter(private val carros: List<Carro>) : RecyclerView.Adapter<CarAdap
         holder.recarga.text = carros[position].recarga
         holder.favorito.setOnClickListener{
             val carro = carros[position]
-            carItemListener(carro)
+            carItemLister(carro)
             setupFavorite(carro, holder)
         }
     }
