@@ -57,7 +57,7 @@ class FavFragment : Fragment() {
     fun setupList() {
         val carros = getCarsOnLocalDb()
         val carroAdapter =
-            CarAdapter(carros) // Utilizando o adapter personalizado com os dados da array populada
+            CarAdapter(carros, isFavoriteScreen = true) // Utilizando o adapter personalizado com os dados da array populada
         listaCarrosFavoritos.apply {
             adapter = carroAdapter
             isVisible = true   // Deixando a lista de carros visível

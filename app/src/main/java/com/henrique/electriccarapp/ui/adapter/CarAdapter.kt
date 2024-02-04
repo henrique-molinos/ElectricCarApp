@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.henrique.electriccarapp.R
 import com.henrique.electriccarapp.domain.Carro
 
-class CarAdapter(private val carros: List<Carro>) : RecyclerView.Adapter<CarAdapter.ViewHolder>() {
+class CarAdapter(private val carros: List<Carro>, private val isFavoriteScreen: Boolean = false) : RecyclerView.Adapter<CarAdapter.ViewHolder>() {
 
     var carItemLister : (Carro) -> Unit = {}
 
@@ -23,6 +23,9 @@ class CarAdapter(private val carros: List<Carro>) : RecyclerView.Adapter<CarAdap
         holder.bateria.text = carros[position].bateria
         holder.potencia.text = carros[position].potencia
         holder.recarga.text = carros[position].recarga
+        if (isFavoriteScreen) {
+            holder.favorito.setImageResource(R.drawable.ic_selected_star_24)
+        }
         holder.favorito.setOnClickListener{
             val carro = carros[position]
             carItemLister(carro)
@@ -34,13 +37,13 @@ class CarAdapter(private val carros: List<Carro>) : RecyclerView.Adapter<CarAdap
         carro: Carro,
         holder: ViewHolder
     ) {
-        carro.isFavorite = !carro.isFavorite
-
-        if (carro.isFavorite) {
+         carro.isFavorite = !carro.isFavorite
+         if (carro.isFavorite) {
             holder.favorito.setImageResource(R.drawable.ic_selected_star_24)
-        } else {
+         } else {
             holder.favorito.setImageResource(R.drawable.ic_star_border_24)
         }
+
     }
 
     override fun getItemCount(): Int = carros.size
